@@ -25,7 +25,7 @@ def csv_to_dict(filename: str) -> dict:
         data = [row for row in csv_data]
     return data
 
-def get_operations(ops_type):
+def get_operations(ops_type: str) -> dict:
     """ To Perform GET operations on ISE """
     headers = {'Content-Type': 'application/json',
                'Accept': 'application/json'}
@@ -49,7 +49,7 @@ def get_operations(ops_type):
     except requests.exceptions.HTTPError as err:
         raise SystemExit(err)
 
-def del_operations(ops_type):
+def del_operations(ops_type: str):
     """ To Perform DEL operations on ISE """
     headers = {'Content-Type': 'application/json',
                'Accept': 'application/json'}
