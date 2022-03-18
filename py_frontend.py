@@ -40,4 +40,4 @@ def ise_upload_error():
     return render_template("ise_upload_error.html")
 
 if __name__ == "__main__":
-    app.run(host="10.31.176.85")
+    app.run(debug=True, ssl_context="adhoc")
