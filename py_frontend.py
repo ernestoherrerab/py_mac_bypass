@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 app.register_blueprint(bypass_blueprint)
 
+Path("csv_data/").mkdir(exist_ok=True)
 
 @app.route("/home")
 def homepage():
@@ -39,4 +40,4 @@ def ise_upload_error():
     return render_template("ise_upload_error.html")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="10.31.176.85")
