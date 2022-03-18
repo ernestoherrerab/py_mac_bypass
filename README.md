@@ -1,3 +1,5 @@
+A front end based on Flask has been added that allows the upload of a csv file.
+
 The idea of this script is to add MAC addresses to a bypass list for guest users in ISE.
 A CSV file is used as the input, this must be located in the csv_data directory on the same location where the script exists.
 
@@ -19,3 +21,7 @@ The "Guest MAB ID" will be shared upon request.
 
 URL_VAR = https://ise_variable:9060
 GUEST_MAB_ID = The ID
+
+Future enhancements:
+- Authentication on the frontend.
+- Possibility to add data manually too instead of CSV files.

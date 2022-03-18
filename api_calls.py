@@ -62,6 +62,6 @@ def post_operations(ops_type: str, operations_data: dict, url_var: str, username
             print("Unexpected server side error.")
         else:
             print("POST Request Failed")
-        return ops_post.text
+        return ops_post.status_code
     except requests.exceptions.HTTPError as err:
         raise SystemExit(err)
