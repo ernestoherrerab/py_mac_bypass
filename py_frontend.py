@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request
 from pathlib import Path
 from werkzeug.utils import secure_filename
 from mac_bypass import bypass_blueprint
@@ -9,9 +9,14 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 app.register_blueprint(bypass_blueprint)
 
-@app.route("/")
+
+@app.route("/home")
 def homepage():
     return render_template("base.html")
+
+@app.route("/")
+def home_redirect():
+    return redirect("/home")
 
 @app.route("/file_upload")
 def csv_upload():
@@ -28,6 +33,10 @@ def upload_file():
 @app.route("/ise_upload")
 def ise_upload():
     return render_template("ise_upload.html")
+
+@app.route("/ise_upload_error")
+def ise_upload_error():
+    return render_template("ise_upload_error.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

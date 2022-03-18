@@ -8,7 +8,7 @@ import csv
 from decouple import config
 from pathlib import Path
 import urllib3
-from flask import Blueprint
+from flask import Blueprint, render_template
 from getpass import getpass
 import api_calls as api
 
@@ -40,20 +40,22 @@ def mac_bypass():
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     
     ### VARIABLES ### 
-    username = input("Username: ")
-    password = getpass(prompt="Password: ", stream=None)
+    #username = input("Username: ")
+    #password = getpass(prompt="Password: ", stream=None)
+    username = config("USERNAME")
+    password = config("PASSWORD")
     src_dir = Path("csv_data/")
     url = config("URL_VAR")
     guest_mab_id = config("GUEST_MAB_ID")
     mac_list = []
     endpoint_list = []
+    post_results = set()
 
     for csv_file in src_dir.iterdir():
         filename = csv_file
 
     ### CONVERT CSV TO DICTIONARY ###
     mac_data = csv_to_dict(filename)
-    print(mac_data)
     for mac in mac_data:
         endpoint_data = {}
         endpoint_data["ERSEndPoint"] = {}
@@ -83,6 +85,10 @@ def mac_bypass():
     for endpoint in endpoint_list:
         mac_address = endpoint["ERSEndPoint"]["mac"]
         print(f"Adding MAC address {mac_address} to the Guest-MAB endpoint group")
-        api.post_operations("endpoint", endpoint, url, username, password)
+        post_result = api.post_operations("endpoint", endpoint, url, username, password)
+        post_results.add(post_result)
     del_files()
-    return "Guest-MAB Identity Group Updated"
+    if post_results == {201}:
+        return render_template("ise_upload.html")
+    else: 
+        return render_template("ise_upload_error.html")
