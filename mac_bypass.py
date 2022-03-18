@@ -8,32 +8,52 @@ import csv
 from decouple import config
 from pathlib import Path
 import urllib3
+from flask import Blueprint
 from getpass import getpass
 import api_calls as api
+
+bypass_blueprint = Blueprint('mac_bypass', __name__)
 
 def csv_to_dict(filename: str) -> dict:
     """
     Function to Convert CSV Data to YAML
     """
-    csv_path = Path("csv_data/") / filename
-    with open(csv_path) as f:
+    #csv_path = Path("csv_data/") / filename
+    with open(filename) as f:
         csv_data = csv.DictReader(f)
         data = [row for row in csv_data]
     return data
 
-def main():
+def del_files():
+    directory = Path("csv_data/")
+    try:
+        for hostname_file in directory.iterdir():
+            try:
+                Path.unlink(hostname_file)
+            except Exception as e:
+                print(e)
+    except IOError as e:
+        print(e)
+
+@bypass_blueprint.route('/ise_upload')
+def mac_bypass():
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     
     ### VARIABLES ### 
     username = input("Username: ")
     password = getpass(prompt="Password: ", stream=None)
+    src_dir = Path("csv_data/")
     url = config("URL_VAR")
     guest_mab_id = config("GUEST_MAB_ID")
     mac_list = []
     endpoint_list = []
 
+    for csv_file in src_dir.iterdir():
+        filename = csv_file
+
     ### CONVERT CSV TO DICTIONARY ###
-    mac_data = csv_to_dict("example.csv")
+    mac_data = csv_to_dict(filename)
+    print(mac_data)
     for mac in mac_data:
         endpoint_data = {}
         endpoint_data["ERSEndPoint"] = {}
@@ -64,6 +84,5 @@ def main():
         mac_address = endpoint["ERSEndPoint"]["mac"]
         print(f"Adding MAC address {mac_address} to the Guest-MAB endpoint group")
         api.post_operations("endpoint", endpoint, url, username, password)
-    
-if __name__ == "__main__":
-    main()
+    del_files()
+    return "Guest-MAB Identity Group Updated"
