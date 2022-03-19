@@ -9,7 +9,18 @@
         <h1>ISE MAC Bypass<br><br></h1>
         <h3>File uploaded!<br><br></h3>
         {% if file_name %}
-            <a class="btn btn-primary" href="ise_upload" role="button">Upload Data To ISE</a>
+        <h5>Enter Credentials:<br><br></h5>
+        <form action="/ise_auth" method = "POST" role="form">
+            <div class="row g-3 align-items-center">
+				<div class="col-auto">
+					<label for="username">Username:</label>
+					<input type="text" class="form-control" id="username" name="username" placeholder="ISE Username">
+					<label for="password">Password:</label>
+					<input type="password" class="form-control" id="password" name="password" placeholder="ISE Password"><br>
+				</div>
+			</div>
+            <button type="submit" class="btn btn-success">Log In</button>
+          </form>
         {% endif %}
         </div>
     </body>
