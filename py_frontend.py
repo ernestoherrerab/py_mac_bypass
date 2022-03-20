@@ -37,6 +37,7 @@ def ise_auth():
         form = request.form
         username=request.form['username']
         password=request.form['password']
+        print("This is from the frontend", username, password)
         with open(".env", "a") as env:
             env.write("\nUSERNAME = " + username + "\n" +
                         "PASSWORD = " + password)
@@ -45,6 +46,10 @@ def ise_auth():
 @app.route("/ise_upload")
 def ise_upload():
     return render_template("ise_upload.html")
+
+@app.route("/ise_auth_error")
+def ise_auth_error():
+    return render_template("ise_auth_error.html")
 
 @app.route("/ise_upload_error")
 def ise_upload_error():
