@@ -7,7 +7,7 @@ from mac_bypass import bypass_blueprint
 UPLOAD_DIR = Path("csv_data/") 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
-#app.register_blueprint(bypass_blueprint)
+app.register_blueprint(bypass_blueprint)
 
 Path("csv_data/").mkdir(exist_ok=True)
 
@@ -37,6 +37,9 @@ def ise_auth():
         form = request.form
         username=request.form['username']
         password=request.form['password']
+        with open(".env", "a") as env:
+            env.write("\nUSERNAME = " + username + "\n" +
+                        "PASSWORD = " + password)
     return render_template("ise_auth.html", form=form)
 
 @app.route("/ise_upload")

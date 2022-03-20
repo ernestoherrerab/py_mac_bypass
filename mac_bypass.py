@@ -25,23 +25,33 @@ def csv_to_dict(filename: str) -> dict:
     return data
 
 def del_files():
-    directory = Path("csv_data/")
+    csv_directory = Path("csv_data/")
     try:
-        for hostname_file in directory.iterdir():
+        for hostname_file in csv_directory.iterdir():
             try:
                 Path.unlink(hostname_file)
             except Exception as e:
                 print(e)
     except IOError as e:
         print(e)
+    try:
+        with open(".env", "r") as env:
+            lines = env.readlines()
+            lines = lines[:-2]
+    except IOError as e:
+        print(e)
+    try:
+        with open(".env", "w") as env:
+            for line in lines:
+                env.write(line)
+    except IOError as e:
+        print(e)
 
-#@bypass_blueprint.route('/ise_upload')
+@bypass_blueprint.route('/ise_upload')
 def mac_bypass():
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     
     ### VARIABLES ### 
-    #username = input("Username: ")
-    #password = getpass(prompt="Password: ", stream=None)
     username = config("USERNAME")
     password = config("PASSWORD")
     src_dir = Path("csv_data/")
