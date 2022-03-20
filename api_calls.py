@@ -21,7 +21,7 @@ def get_operations(ops_type: str, url_var:str, username: str, password: str) -> 
             print("Unexpected server side error.")
         else:
             print("GET Request Failed")
-        return ops_data
+        return ops_data, ops_get.status_code
     except requests.exceptions.HTTPError as err:
         raise SystemExit(err)
 

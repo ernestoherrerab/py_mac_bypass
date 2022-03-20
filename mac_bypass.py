@@ -78,13 +78,16 @@ def mac_bypass():
             print("Searching Device Type Profile ID...")
             endpoint_data["ERSEndPoint"]["staticProfileAssignment"] = "true"
             profile_name = mac["Device Type"]
-            profiles_data = api.get_operations(f"profilerprofile?filter=name.EQ.{profile_name}", url, username, password)   
+            profiles_data, prof_get_code = api.get_operations(f"profilerprofile?filter=name.EQ.{profile_name}", url, username, password)   
+            print(prof_get_code)
             for profile in profiles_data["SearchResult"]["resources"]:
                 endpoint_data["ERSEndPoint"]["profileId"] = profile["id"]    
         endpoint_list.append(endpoint_data)
     
     ### GET ALL MACS IN THE GUEST-MAB GROUP TO REMOVE ALREADY EXISTING ENTRIES ###  
-    guest_mab_members = api.get_operations(f"endpoint?filter=groupId.EQ.{guest_mab_id}", url, username, password)["SearchResult"]["resources"]
+    guest_mab, guest_get_code = api.get_operations(f"endpoint?filter=groupId.EQ.{guest_mab_id}", url, username, password)
+    guest_mab_members = guest_mab["SearchResult"]["resources"]
+    print(guest_get_code)
     for guest_mac in guest_mab_members:
         if guest_mac["name"] in mac_list:
             print(f'{guest_mac["name"]} exists already...removing...')
