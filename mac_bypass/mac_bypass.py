@@ -9,10 +9,7 @@ import csv
 from decouple import config
 from pathlib import Path
 import urllib3
-from flask import Blueprint, render_template
 import mac_bypass.api_calls as api
-
-#bypass_blueprint = Blueprint('mac_bypass', __name__)
 
 def csv_to_dict(filename: str) -> dict:
     """
@@ -33,47 +30,17 @@ def del_files():
                 print(e)
     except IOError as e:
         print(e)
-    try:
-        with open(".env", "r") as env:
-            lines = env.readlines()
-            lines = lines[:-2]
-    except IOError as e:
-        print(e)
-    try:
-        with open(".env", "w") as env:
-            lines = filter(lambda x: x.strip(), lines)
-            env.writelines(lines)      
-    except IOError as e:
-        print(e)
 
-#@bypass_blueprint.route('/ise_upload')
-def mac_bypass():
+def mac_bypass(username, password):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     
     ### VARIABLES ### 
-    username = None
-    password = None
-    print(username,password)
-    username = config("USERNAME")
-    password = config("PASSWORD")
     src_dir = Path("csv_data/")
     url = config("URL_VAR")
     guest_mab_id = config("GUEST_MAB_ID")
     mac_list = []
     endpoint_list = []
-    post_results = set()
-    
-    
-    host_file = open(".env", "r")
-    content = host_file.read()
-    print(content)
-    host_file.close()
-    print(username,password)
-    print("**************")
-    username_dos = config("USERNAME")
-    username_tres = config("PASSWORD")
-    print(username_dos, username_tres)
-    
+    post_results = set()  
 
     for csv_file in src_dir.iterdir():
         filename = csv_file
@@ -95,13 +62,16 @@ def mac_bypass():
             profiles_data = api.get_operations(f"profilerprofile?filter=name.EQ.{profile_name}", url, username, password)   
             if profiles_data == 401:
                 del_files()     
-                return render_template("ise_auth_error.html")
+                return profiles_data
             for profile in profiles_data["SearchResult"]["resources"]:
                 endpoint_data["ERSEndPoint"]["profileId"] = profile["id"]    
         endpoint_list.append(endpoint_data)
     
     ### GET ALL MACS IN THE GUEST-MAB GROUP TO REMOVE ALREADY EXISTING ENTRIES ###  
     guest_mab = api.get_operations(f"endpoint?filter=groupId.EQ.{guest_mab_id}", url, username, password)
+    if profiles_data == 401:
+        del_files()
+        return profiles_data
     guest_mab_members = guest_mab["SearchResult"]["resources"]
     for guest_mac in guest_mab_members:
         if guest_mac["name"] in mac_list:
@@ -116,9 +86,6 @@ def mac_bypass():
         post_result = api.post_operations("endpoint", endpoint, url, username, password)
         post_results.add(post_result)
     del_files()
-    if post_results == {201}:
-        return render_template("ise_upload.html")
-    else: 
-        return render_template("ise_upload_error.html")
+    return post_results
     
         
