@@ -1,8 +1,9 @@
+import sys
+sys.dont_write_bytecode = True
 from flask import Flask, redirect, render_template, request
 from pathlib import Path
 from werkzeug.utils import secure_filename
 from mac_bypass import bypass_blueprint
-
 
 UPLOAD_DIR = Path("csv_data/") 
 app = Flask(__name__)
@@ -13,7 +14,7 @@ Path("csv_data/").mkdir(exist_ok=True)
 
 @app.route("/home")
 def homepage():
-    return render_template("base.html")
+    return render_template("home.html")
 
 @app.route("/")
 def home_redirect():
@@ -39,7 +40,7 @@ def ise_auth():
         password=request.form['password']
         print("This is from the frontend", username, password)
         with open(".env", "a") as env:
-            env.write("\nUSERNAME = " + username + "\n" +
+            env.write("USERNAME = " + username + "\n" +
                         "PASSWORD = " + password)
     return render_template("ise_auth.html", form=form)
 

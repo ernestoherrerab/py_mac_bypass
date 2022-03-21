@@ -3,7 +3,8 @@
 Script to add MAC addresses to the ISE 
 Guest MAB ID Group
 """
-
+import sys
+sys.dont_write_bytecode = True
 import csv
 from decouple import config
 from pathlib import Path
@@ -40,8 +41,8 @@ def del_files():
         print(e)
     try:
         with open(".env", "w") as env:
-            for line in lines:
-                env.write(line)
+            lines = filter(lambda x: x.strip(), lines)
+            env.writelines(lines)      
     except IOError as e:
         print(e)
 

@@ -1,7 +1,5 @@
 from json import loads
 import requests
-from flask import render_template
-
 
 def get_operations(ops_type: str, url_var:str, username: str, password: str) -> dict:
     """ To Perform GET operations on ISE """
