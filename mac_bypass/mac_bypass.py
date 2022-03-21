@@ -12,7 +12,7 @@ import urllib3
 from flask import Blueprint, render_template
 import mac_bypass.api_calls as api
 
-bypass_blueprint = Blueprint('mac_bypass', __name__)
+#bypass_blueprint = Blueprint('mac_bypass', __name__)
 
 def csv_to_dict(filename: str) -> dict:
     """
@@ -46,7 +46,7 @@ def del_files():
     except IOError as e:
         print(e)
 
-@bypass_blueprint.route('/ise_upload')
+#@bypass_blueprint.route('/ise_upload')
 def mac_bypass():
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     
