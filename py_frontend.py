@@ -3,7 +3,7 @@ sys.dont_write_bytecode = True
 from flask import Flask, redirect, render_template, request
 from pathlib import Path
 from werkzeug.utils import secure_filename
-from mac_bypass import bypass_blueprint
+from mac_bypass.mac_bypass import bypass_blueprint
 
 UPLOAD_DIR = Path("csv_data/") 
 app = Flask(__name__)
@@ -13,7 +13,7 @@ app.register_blueprint(bypass_blueprint)
 Path("csv_data/").mkdir(exist_ok=True)
 
 @app.route("/home")
-def homepage():
+def home():
     return render_template("home.html")
 
 @app.route("/")
@@ -26,11 +26,13 @@ def csv_upload():
 
 @app.route("/uploader", methods = ['GET', 'POST'])
 def uploader():
-   if request.method == 'POST':
-      f = request.files['file']
-      f.save(app.config['UPLOAD_FOLDER'] / secure_filename(f.filename))
-      file_name = f.filename
-      return render_template("uploader.html", file_name=file_name)
+    if request.method == 'GET':
+        return render_template("uploader.html")
+    if request.method == 'POST':
+       f = request.files['file']
+       f.save(app.config['UPLOAD_FOLDER'] / secure_filename(f.filename))
+       file_name = f.filename
+       return render_template("uploader.html", file_name=file_name)
 
 @app.route("/ise_auth", methods = ['POST', 'GET'])
 def ise_auth():

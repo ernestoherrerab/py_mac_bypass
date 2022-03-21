@@ -10,7 +10,7 @@ from decouple import config
 from pathlib import Path
 import urllib3
 from flask import Blueprint, render_template
-import api_calls as api
+import mac_bypass.api_calls as api
 
 bypass_blueprint = Blueprint('mac_bypass', __name__)
 
