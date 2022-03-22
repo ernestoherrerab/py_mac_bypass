@@ -8,7 +8,6 @@ import mac_bypass.mac_bypass as bypass
 UPLOAD_DIR = Path("csv_data/") 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
-#app.register_blueprint(bypass_blueprint)
 
 Path("csv_data/").mkdir(exist_ok=True)
 
@@ -56,4 +55,4 @@ def ise_upload_error():
     return render_template("ise_upload_error.html")
 
 if __name__ == "__main__":
-    app.run(ssl_context="adhoc")
+    app.run(host="10.31.176.85", ssl_context="adhoc")
