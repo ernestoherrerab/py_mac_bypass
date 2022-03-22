@@ -1,7 +1,6 @@
 from json import loads
 import requests
 
-
 def get_operations(ops_type: str, url_var:str, username: str, password: str) -> dict:
     """ To Perform GET operations on ISE """
     headers = {'Content-Type': 'application/json',
@@ -9,12 +8,15 @@ def get_operations(ops_type: str, url_var:str, username: str, password: str) -> 
     url = f"{url_var}/ers/config/{ops_type}"
     try:
         ops_get = requests.get(url, headers=headers,auth=(username, password), verify=False)
+        if ops_get.status_code == 401:
+            ops_get.close()
+            return ops_get.status_code
         ops_get.raise_for_status()
         ops_data = loads(ops_get.text)
         if ops_get.status_code == 200:
             print("GET Request Successful!")
-        elif ops_get.status_code == 401:
-            print("Token error. Login again.")
+        elif ops_get.status_code == 401:          
+            print("Authentication. Login again.")
         elif ops_get.status_code == 403:
             print("Insufficient permissions to access this resource.")
         elif ops_get.status_code == 500:

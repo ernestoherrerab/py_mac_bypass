@@ -1,3 +1,4 @@
 .env
 csv_data/
 archive/
+__pycache__/
