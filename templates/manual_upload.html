@@ -23,15 +23,17 @@
 				<div class="col-2">
 					<div class="p-3">
 						<label for="macAddr">MAC Address</label></td>
-						<input type="text" class="form-control" id="macAddr" name="macAddr" placeholder="AA:AA:AA:AA:AA:AA">
+						<input type="text" onfocus="this.value=''" class="form-control" id="macAddr" name="macAddr" placeholder="AA:AA:AA:AA:AA:AA">
                         <label for="devType">Device Type:</label>
-						<input type="text" class="form-control" id="devType" name="devType" placeholder="Device Type - See Below">
+						<input type="text" onfocus="this.value=''" class="form-control" id="devType" name="devType" placeholder="Device Type - See Below">
 					</div>
 				</div>
 				<div class="col-2">
 					<div class="p-5">
 						<textarea name="outputtext" rows="3" cols="60"></textarea>
-                        <button type="submit" class="btn btn-success">Submit To ISE</button>
+                        <p><button type="submit" class="btn btn-success">Submit To ISE</button></p>
+                        
+                        <p><a class="btn btn-primary" href="home" role="button">Back To Home</a></p>
 					</div>
 				</div>
 			</div>

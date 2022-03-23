@@ -10,7 +10,6 @@ UPLOAD_DIR = Path("csv_data/")
 GUEST_MAB_ID = config("GUEST_MAB_ID")
 FLASK_KEY = config("SECRET_KEY")
 
-endpoint = {}
 endpoint_list = []
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
@@ -54,16 +53,14 @@ def ise_login():
                     for data in data_input:
                         data = data.split(",")
                         if data != ['']:
-                            endpoint["ERSEndPoint"] = {}
+                            endpoint = {}
                             mac_add = data[0]
                             dev_type = data[1]
-                            endpoint["ERSEndPoint"]["name"] = mac_add
-                            endpoint["ERSEndPoint"]["mac"] = mac_add
-                            endpoint["ERSEndPoint"]["profileId"] = dev_type
-                            endpoint["ERSEndPoint"]["staticGroupAssignment"] = "true"
-                            endpoint["ERSEndPoint"]["groupId"] = GUEST_MAB_ID
+                            endpoint["MAC Address"] = mac_add
+                            endpoint["Device Type"] = dev_type
                             endpoint_list.append(endpoint)
             session["endpoint_list"] = endpoint_list
+            print(f"Manual Input {endpoint_list}")
             return render_template("ise_login.html", endpoint_list=endpoint_list)
 
 @app.route("/ise_auth", methods = ['POST', 'GET'])
@@ -72,7 +69,9 @@ def ise_auth():
         if "username" in request.form:
             username=request.form['username']
             password=request.form['password']
-            result = bypass.mac_bypass(username, password)
+            if not session.get("endpoint_list") is None:
+                manual_data = session.get("endpoint_list")
+                result = bypass.mac_bypass(username, password, manual_data)
             if result == 401:
                 return render_template("ise_auth_error.html")
             elif result == {201}:
@@ -90,4 +89,4 @@ def ise_upload_error():
     return render_template("ise_upload_error.html")
 
 if __name__ == "__main__":
-    app.run(debug=True, host="127.0.0.1", ssl_context="adhoc")
+    app.run(host="10.31.176.85", ssl_context="adhoc")
