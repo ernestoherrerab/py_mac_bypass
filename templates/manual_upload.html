@@ -18,7 +18,7 @@
         <div class="alert alert-info" role="alert">
         <h1>ISE MAC Bypass<br><br></h1>
         <h4>Enter Data Manually:<br><br></h4> 
-        <form name="macForm">
+        <form name="macForm"  action="/ise_login" method = "POST" role="form">
 			<div class="row gy-5">
 				<div class="col-2">
 					<div class="p-3">
@@ -31,6 +31,7 @@
 				<div class="col-2">
 					<div class="p-5">
 						<textarea name="outputtext" rows="3" cols="60"></textarea>
+                        <button type="submit" class="btn btn-success">Submit To ISE</button>
 					</div>
 				</div>
 			</div>
@@ -39,10 +40,6 @@
 					<div class="p-3">
 						<input type="radio" name="placement" value="append" checked> Add Data
 					</div>
-				</div>
-			</div>
-			<div class="row gy-5">
-				<div class="col-3">
 					<div class="p-3">
 						<input type="radio" name="placement" value="replace"> Clear
 					</div>
@@ -54,7 +51,6 @@
 						<input type="button" value="Add MAC Address" onClick="addtext();">
 					</div>
 				</div>
-			</div>
         </form>
         <div class="alert alert-success" role="alert">
         <hr width="100%" size="8" align="center">
