@@ -10,7 +10,7 @@
                 if (document.macForm.placement[1].checked) {
                     document.macForm.outputtext.value = "";
                     }
-                document.macForm.outputtext.value += newtext_1 + "," + newtext_2;
+                document.macForm.outputtext.value += newtext_1 + "," + newtext_2 + "\n";
             }
             </script>
     </head>
@@ -19,17 +19,43 @@
         <h1>ISE MAC Bypass<br><br></h1>
         <h4>Enter Data Manually:<br><br></h4> 
         <form name="macForm">
-            <table border="0" cellspacing="0" cellpadding="5"><tr>
-            <td><label for="macAddr">MAC Address</label></td>
-            <td><input type="text" class="form-control" id="macAddr" name="macAddr" placeholder="AA:AA:AA:AA:AA:AA"></td>
-            <td><td><textarea name="outputtext" rows="4" cols="50"></textarea></td></td></tr>
-            <tr><td><label for="devType">Device Type:</label></td>
-            <td><input type="text" class="form-control" id="devType" name="devType" placeholder="Device Type - See Below"></td></tr>
-            <tr><td><input type="radio" name="placement" value="append" checked> Add Data</td></tr>
-            <tr><td><input type="radio" name="placement" value="replace"> Clear</td></tr>
-            <td><input type="button" value="Add MAC Address" onClick="addtext();"></td>
-            </table>
-            </form>
+			<div class="row gy-5">
+				<div class="col-2">
+					<div class="p-3">
+						<label for="macAddr">MAC Address</label></td>
+						<input type="text" class="form-control" id="macAddr" name="macAddr" placeholder="AA:AA:AA:AA:AA:AA">
+                        <label for="devType">Device Type:</label>
+						<input type="text" class="form-control" id="devType" name="devType" placeholder="Device Type - See Below">
+					</div>
+				</div>
+				<div class="col-2">
+					<div class="p-5">
+						<textarea name="outputtext" rows="3" cols="60"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="row gy-5">
+				<div class="col-6">
+					<div class="p-3">
+						<input type="radio" name="placement" value="append" checked> Add Data
+					</div>
+				</div>
+			</div>
+			<div class="row gy-5">
+				<div class="col-3">
+					<div class="p-3">
+						<input type="radio" name="placement" value="replace"> Clear
+					</div>
+				</div>
+			</div>
+			<div class="row gy-5">
+				<div class="col-3">
+					<div class="p-3">
+						<input type="button" value="Add MAC Address" onClick="addtext();">
+					</div>
+				</div>
+			</div>
+        </form>
         <div class="alert alert-success" role="alert">
         <hr width="100%" size="8" align="center">
         <p class="text-start"><b>The following are the most common devices supported for "Device Type":</b></p>
