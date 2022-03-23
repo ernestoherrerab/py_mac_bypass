@@ -20,8 +20,12 @@ def home_redirect():
     return redirect("/home")
 
 @app.route("/file_upload")
-def csv_upload():
+def file_upload():
     return render_template("file_upload.html")
+
+@app.route("/manual_upload")
+def manual_upload():
+    return render_template("manual_upload.html")
 
 @app.route("/uploader", methods = ['GET', 'POST'])
 def uploader():
@@ -55,4 +59,4 @@ def ise_upload_error():
     return render_template("ise_upload_error.html")
 
 if __name__ == "__main__":
-    app.run(host="10.31.176.85", ssl_context="adhoc")
+    app.run(debug=True, host="127.0.0.1", ssl_context="adhoc")

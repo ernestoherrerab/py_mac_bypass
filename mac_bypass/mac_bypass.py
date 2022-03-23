@@ -42,8 +42,11 @@ def mac_bypass(username, password):
     endpoint_list = []
     post_results = set()  
 
-    for csv_file in src_dir.iterdir():
-        filename = csv_file
+    try:
+        for csv_file in src_dir.iterdir():
+            filename = csv_file
+    except FileNotFoundError as e:
+        print(e)
 
     ### CONVERT CSV TO DICTIONARY ###
     mac_data = csv_to_dict(filename)
