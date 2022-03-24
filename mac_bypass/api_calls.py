@@ -34,8 +34,11 @@ def del_operations(ops_type: str, url_var:str, username: str, password: str):
     url = f"{url_var}/ers/config/{ops_type}"
     try:
         ops_del = requests.delete(url, headers=headers,auth=(username, password), verify=False)
+        if ops_del.status_code == 401:
+            ops_del.close()
+            return ops_del.status_code
         ops_del.raise_for_status()
-        return ops_del.text
+        return ops_del.status_code
     except requests.exceptions.HTTPError as err:
         raise SystemExit(err)
 

@@ -41,7 +41,7 @@ def mac_bypass(username, password, manual_data=None):
     mac_list = []
     endpoint_list = []
     post_results = set()  
-
+    
     ### EVALUATE IF DATA COMES FROM FILE OR MANUAL INPUT ###
     dir_contents = any(src_dir.iterdir())
     if dir_contents:
@@ -74,9 +74,9 @@ def mac_bypass(username, password, manual_data=None):
     
     ### GET ALL MACS IN THE GUEST-MAB GROUP TO REMOVE ALREADY EXISTING ENTRIES ###  
     guest_mab = api.get_operations(f"endpoint?filter=groupId.EQ.{GUEST_MAB_ID}", URL, username, password)
-    if profiles_data == 401:
+    if guest_mab == 401:
         del_files()
-        return profiles_data
+        return guest_mab
     guest_mab_members = guest_mab["SearchResult"]["resources"]
     for guest_mac in guest_mab_members:
         if guest_mac["name"] in mac_list:
@@ -93,4 +93,39 @@ def mac_bypass(username, password, manual_data=None):
     del_files()
     return post_results
     
-        
+def del_endpoints(username, password, manual_data=None):
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)        
+
+    ### VARIABLES ### 
+    src_dir = Path("csv_data/")
+    URL = config("URL_VAR")
+    GUEST_MAB_ID = config("GUEST_MAB_ID")
+    mac_list = []
+    del_results = set()
+
+    ### EVALUATE IF DATA COMES FROM FILE OR MANUAL INPUT ###
+    dir_contents = any(src_dir.iterdir())
+    if dir_contents:
+        for csv_file in src_dir.iterdir():
+                filename = csv_file
+                mac_data = csv_to_dict(filename)
+                for mac_add in mac_data:
+                    mac = mac_add["MAC Address"]
+                    mac_list.append(mac)
+    elif not dir_contents:
+        mac_list = manual_data
+
+    ### EVALUATE IF INPUT DATA EXISTS AND DELETE IT ###
+    guest_mab = api.get_operations(f"endpoint?filter=groupId.EQ.{GUEST_MAB_ID}", URL, username, password)
+    if guest_mab == 401:
+        del_files()
+        return guest_mab
+    guest_mab_members = guest_mab["SearchResult"]["resources"]
+    for guest_mac in guest_mab_members:
+        if guest_mac["name"] in mac_list:
+            print(f'{guest_mac["name"]} does exist...deleting...')
+            guest_mac_id = guest_mac["id"]
+            del_result = api.del_operations(f'endpoint/{guest_mac_id}', URL, username, password) 
+            del_results.add(del_result)
+    del_files()
+    return del_results
