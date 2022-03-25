@@ -1,3 +1,10 @@
+#! /usr/bin/env python
+"""
+Package that creates a frontend to upload data via forms
+and upload said data to ISE to modify the Guest-MAB
+endpoint group
+"""
+
 import sys
 sys.dont_write_bytecode = True
 from pathlib import Path
@@ -6,10 +13,12 @@ from flask import Flask, redirect, render_template, request, session
 from werkzeug.utils import secure_filename
 import mac_bypass.mac_bypass as bypass
 
+### VARIABLES ###
 UPLOAD_DIR = Path("csv_data/") 
 GUEST_MAB_ID = config("GUEST_MAB_ID")
 FLASK_KEY = config("SECRET_KEY")
 FLASK_SERVER = config("FLASK_SERVER")
+DEBUG_MODE = config("DEBUG_MODE")
 
 endpoint_list = []
 mac_list = []
@@ -17,8 +26,10 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 app.secret_key = FLASK_KEY
 
+### CREATE THE CSV DATA DIRECTORY ###
 Path("csv_data/").mkdir(exist_ok=True)
 
+#### VIEWS DEFINITIONS ###
 @app.route("/home")
 def home():
     return render_template("home.html")
@@ -43,6 +54,9 @@ def manual_upload():
 def del_manual_upload():
     return render_template("del_manual_upload.html")
 
+"""ROUTE THAT REQUESTS CREDENTIALS FOR ISE THIS 
+   ROUTE HOLDS THE DATA INPUT VALUE AND CARRIES 
+   IT TO THE del_ise_auth FUNCTION TO UPLOAD DATA"""
 @app.route("/ise_login", methods = ['GET', 'POST'])
 def ise_login():
     if request.method == 'GET':
@@ -73,6 +87,9 @@ def ise_login():
             print(f"Manual Input {endpoint_list}")
             return render_template("ise_login.html", endpoint_list=endpoint_list)
 
+"""ROUTE THAT REQUESTS CREDENTIALS FOR ISE 
+   THIS ROUTE HOLDS THE DATA INPUT VALUE AND
+   CARRIES IT TO THE del_ise_auth FUNCTION TO DELETE DATA"""
 @app.route("/del_ise_login", methods = ['GET', 'POST'])
 def del_ise_login():
     if request.method == 'GET':
@@ -98,6 +115,7 @@ def del_ise_login():
             print(f"Manual Input {mac_list}")
             return render_template("del_ise_login.html", mac_list=mac_list)
 
+### GETS DATA INPUT FROM USER AND SUBMITS THE API CALLS TO ISE ###
 @app.route("/ise_auth", methods = ['POST', 'GET'])
 def ise_auth():
     if request.method == 'POST':
@@ -114,6 +132,7 @@ def ise_auth():
             else: 
                 return render_template("ise_upload_error.html")
 
+### GETS DATA INPUT FROM USER AND SUBMITS THE API CALLS TO ISE ###
 @app.route("/del_ise_auth", methods = ['POST', 'GET'])
 def del_ise_auth():
     if request.method == 'POST':
@@ -140,4 +159,7 @@ def ise_upload_error():
     return render_template("ise_upload_error.html")
 
 if __name__ == "__main__":
-    app.run(host=FLASK_SERVER, ssl_context="adhoc")
+    """
+    Starts the Flask object
+    """
+    app.run(debug=DEBUG_MODE, confighost=FLASK_SERVER, ssl_context="adhoc")
