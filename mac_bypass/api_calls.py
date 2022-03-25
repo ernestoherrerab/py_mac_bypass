@@ -1,3 +1,8 @@
+#! /usr/bin/env python
+"""
+Module to group the CRUD operations for API calls
+"""
+
 from json import loads
 import requests
 
