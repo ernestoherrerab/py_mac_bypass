@@ -10,6 +10,7 @@ sys.dont_write_bytecode = True
 from pathlib import Path
 from decouple import config
 from flask import Flask, redirect, render_template, request, session
+from waitress import serve
 from werkzeug.utils import secure_filename
 import mac_bypass.mac_bypass as bypass
 
@@ -19,6 +20,7 @@ GUEST_MAB_ID = config("GUEST_MAB_ID")
 FLASK_KEY = config("SECRET_KEY")
 FLASK_SERVER = config("FLASK_SERVER")
 DEBUG_MODE = eval(config("DEBUG_MODE"))
+SERVER_PORT = config("SERVER_PORT")
 
 endpoint_list = []
 mac_list = []
@@ -162,4 +164,4 @@ if __name__ == "__main__":
     """
     Starts the Flask object
     """
-    app.run(debug=DEBUG_MODE, host=FLASK_SERVER, ssl_context="adhoc")
+    serve(app, host=FLASK_SERVER, port=SERVER_PORT)
