@@ -162,4 +162,4 @@ if __name__ == "__main__":
     """
     Starts the Flask object
     """
-    app.run(debug=DEBUG_MODE, confighost=FLASK_SERVER, ssl_context="adhoc")
+    app.run(debug=DEBUG_MODE, host=FLASK_SERVER, ssl_context="adhoc")
