@@ -18,7 +18,7 @@ UPLOAD_DIR = Path("csv_data/")
 GUEST_MAB_ID = config("GUEST_MAB_ID")
 FLASK_KEY = config("SECRET_KEY")
 FLASK_SERVER = config("FLASK_SERVER")
-DEBUG_MODE = config("DEBUG_MODE")
+DEBUG_MODE = eval(config("DEBUG_MODE"))
 
 endpoint_list = []
 mac_list = []
