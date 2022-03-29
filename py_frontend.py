@@ -10,7 +10,7 @@ sys.dont_write_bytecode = True
 from pathlib import Path
 from decouple import config
 from flask import Flask, redirect, render_template, request, session
-from waitress import serve
+#from waitress import serve
 from werkzeug.utils import secure_filename
 import mac_bypass.mac_bypass as bypass
 
@@ -127,6 +127,8 @@ def ise_auth():
             if not session.get("endpoint_list") is None:
                 manual_data = session.get("endpoint_list")
                 result = bypass.mac_bypass(username, password, manual_data)
+            else:
+                result = bypass.mac_bypass(username, password)
             if result == 401:
                 return render_template("ise_auth_error.html")
             elif result == {201}:
@@ -164,4 +166,4 @@ if __name__ == "__main__":
     """
     Starts the Flask object
     """
-    serve(app, host=FLASK_SERVER, port=SERVER_PORT)
+    app.run(debug=True, host=FLASK_SERVER, port=SERVER_PORT)
